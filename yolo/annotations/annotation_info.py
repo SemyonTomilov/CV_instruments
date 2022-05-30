@@ -1,9 +1,9 @@
-from .yolo_annotations import bbox_yolo, get_yolo_annotations, get_dict_class_names
+from .yolo_annotations import get_yolo_annotations, get_dict_class_names
 import os
-IMAGES_EXT = ['.png', '.jpg']
 import sys
 import pandas as pd
 from PIL import Image
+IMAGES_EXT = ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG']
 
 def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_txt = None):
 
@@ -132,7 +132,7 @@ def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_tx
     amount_classes = ""
     for id_class in amount_classes_copy:
         if(path_class_names_txt is None):
-            amount_classes += "-" + str(id_class) + ": " + str(amount_classes_copy[id_class]) + "\n"
+            amount_classes += "-(" + str(id_class) + "): " + str(amount_classes_copy[id_class]) + "\n"
         else:
             amount_classes += "-" + str(class_names[id_class]) + ": " + str(amount_classes_copy[id_class]) + "\n"
 
@@ -145,4 +145,4 @@ def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_tx
                         index = ['min', 'max', 'mean'],
                         columns = ["width(img)", 'height(img)', 'width(bbox)', 'height(bbox)'])
     sys.stdout.write(df.to_string())
-    sys.stdout.write("\n\nNumber of classes:\n{0}".format(amount_classes))
+    sys.stdout.write("\n\nNumber bbox of classes:\n{0}".format(amount_classes))
