@@ -1,4 +1,5 @@
 #YOLO format of annotations
+from utils.annotation_validation import is_yolo_format
 '''
 It's .txt-file with the same name as image-file, but with .txt-extension.
 Structure: <object_class> <x_center> <y_center> <width> <height>
@@ -24,12 +25,18 @@ def get_yolo_annotations(txt_file):
     boxes = []
     with open(txt_file, 'r') as yolo_txt:
         for line in yolo_txt.readlines():
+            if(not line):
+                break
             line = line.strip('\n').split(' ')
-            boxes.append(bbox_yolo(int(line[0]),
+            if(is_yolo_format(*line)):
+                boxes.append(bbox_yolo(int(line[0]),
                                    float(line[1]),
                                    float(line[2]),
                                    float(line[3]),
                                    float(line[4])))
+            else:
+                return None
+
     return boxes
 
 #Function for getting a dictionary of class names (index - name)

@@ -5,6 +5,14 @@ import pandas as pd
 from PIL import Image
 IMAGES_EXT = ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG']
 
+'''
+Displays the following information about the dataset (yolo format):
+total number of images (with bboxes and without bboxes),
+total number of bboxes,
+resolution information of images ad bboxes(min, max, mean resolution of images and bboxes),
+number of each class.
+'''
+
 def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_txt = None):
 
     #Images
@@ -98,6 +106,9 @@ def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_tx
         width, height = Image.open(img + img_ext).size
 
         tmp_bboxes = get_yolo_annotations(img + ".txt")
+        if(tmp_bboxes is None):
+            sys.stdout.write("\nError! Incorrect markup format in {0}\n".format(img + ".txt"))
+            continue
         for box in tmp_bboxes:
             total_amount_boxes += 1
             if(path_class_names_txt is not None):
@@ -119,8 +130,12 @@ def annotation_yolo_info(direcotry_path_annotation_and_imgs, path_class_names_tx
                 max_height_bbox = box.height * height
             mean_height_bbox += box.height * height
             mean_width_bbox += box.width * height
-    mean_height_bbox = mean_height_bbox / total_amount_boxes
-    mean_width_bbox = mean_width_bbox / total_amount_boxes
+    if(total_amount_boxes == 0):
+        mean_height_bbox = 0
+        mean_width_bbox = 0
+    else:
+        mean_height_bbox = mean_height_bbox / total_amount_boxes
+        mean_width_bbox = mean_width_bbox / total_amount_boxes
     print("\n")
     max_height_bbox = int(max_height_bbox)
     min_height_bbox = int(min_height_bbox)
